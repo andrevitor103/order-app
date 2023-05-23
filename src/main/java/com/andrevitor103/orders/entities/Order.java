@@ -2,11 +2,14 @@ package com.andrevitor103.orders.entities;
 
 import com.andrevitor103.orders.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_order")
@@ -25,6 +28,9 @@ public class Order implements Serializable {
     private Integer orderStatus;
 
     private Payment payment = null;
+
+    @OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items = new HashSet<>();
 
     public Order() {
     }
@@ -76,6 +82,10 @@ public class Order implements Serializable {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+
+    public Set<OrderItem> getItems() {
+        return items;
     }
 
     @Override
