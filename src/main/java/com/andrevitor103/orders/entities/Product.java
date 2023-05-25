@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -22,6 +23,9 @@ public class Product {
     @JsonIgnore
     @ManyToMany(mappedBy = "products")
     private Set<Category> categories = new HashSet<>();
+
+    @OneToMany(mappedBy = "id.product")
+    private Set<OrderItem> items = new HashSet<>();
 
     public Product() {
     }
@@ -62,12 +66,12 @@ public class Product {
         return price;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     public String getImgUrl() {
         return imgUrl;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public void setImgUrl(String imgUrl) {
@@ -76,5 +80,27 @@ public class Product {
 
     public Set<Category> getCategories() {
         return categories;
+    }
+
+    @JsonIgnore
+    public Set<Order> getOrders() {
+        Set<Order> orderItems = new HashSet<>();
+        for(OrderItem item: items) {
+            orderItems.add(item.getOrder());
+        }
+        return orderItems;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
