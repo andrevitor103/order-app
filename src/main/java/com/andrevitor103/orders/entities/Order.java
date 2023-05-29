@@ -27,7 +27,8 @@ public class Order implements Serializable {
 
     private Integer orderStatus;
 
-    private Payment payment = null;
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
 
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
@@ -86,6 +87,14 @@ public class Order implements Serializable {
 
     public Set<OrderItem> getItems() {
         return items;
+    }
+
+    public Double getTotal() {
+        Double total = 0.0;
+        for (OrderItem item: items) {
+            total += item.getSubTotal();
+        }
+        return total;
     }
 
     @Override

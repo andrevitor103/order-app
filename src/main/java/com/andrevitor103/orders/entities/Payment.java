@@ -1,5 +1,6 @@
 package com.andrevitor103.orders.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -14,8 +15,18 @@ public class Payment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Instant moment;
+    @JsonIgnore
+    @OneToOne
+    @MapsId
+    private Order order;
 
     public Payment() {
+    }
+
+    public Payment(Long id, Instant moment, Order order) {
+        this.id = id;
+        this.moment = moment;
+        this.order = order;
     }
 
     public Long getId() {
@@ -34,6 +45,13 @@ public class Payment implements Serializable {
         this.moment = moment;
     }
 
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
